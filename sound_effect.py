@@ -19,7 +19,7 @@ black = "#13131A"
 player = pygame.Rect(200, 300, 50, 50)
 obstacle = pygame.Rect(220, 0, 50, 50)
 speed_y = 12
-lives = 5
+lives = 3
 game_over = False
 
 # mwmasukkan suara / efek suara
@@ -112,7 +112,7 @@ while True:
   # membuat nyawa dalam avatar / gambar
   if icon:
     for i in range(lives):
-      screen.blit(icon, (20 + 1 * 40, 20))
+      screen.blit(icon, (20 + i * 40, 20))
   else:
     text = font_small.render(f"nyawa : {lives}", True, black)
     screen.blit(text, (20, 20))
