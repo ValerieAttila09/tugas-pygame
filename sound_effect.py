@@ -16,8 +16,16 @@ white = "#FFFFFF"
 black = "#13131A"
 
 # posisi objek
-player = pygame.Rect(200, 300, 50, 50)
-obstacle = pygame.Rect(220, 0, 50, 50)
+player = pygame.image.load("./images/jet-plane.png")
+player = pygame.transform.scale(player, (50, 50))
+rect_player = player.get_rect()
+rect_player.center = (200, 300)
+
+obstacle = pygame.image.load("./images/asteroid.png")
+obstacle = pygame.transform.scale(obstacle, (50, 50))
+rect_obstacle = obstacle.get_rect()
+rect_obstacle.center = (220, 0)
+
 speed_y = 12
 lives = 3
 game_over = False
@@ -85,29 +93,32 @@ while True:
   keys = pygame.key.get_pressed()
   if not game_over:
     if keys[pygame.K_LEFT]:
-      player.x -= 8
+      rect_player.x -= 8
     if keys[pygame.K_RIGHT]:
-      player.x += 8
+      rect_player.x += 8
     # atur kecepatan obstacles
-    obstacle.y += speed_y
-    if obstacle.y > 400:
-      obstacle.y = -50
+    rect_obstacle.y += speed_y
+    if rect_obstacle.y > 400:
+      rect_obstacle.y = -50
     
-    if player.colliderect(obstacle):
+    if rect_player.colliderect(rect_obstacle):
       lives -= 1
       if hit_sound:
         hit_sound.play()
       screen.fill(red) 
       pygame.display.flip()
       pygame.time.delay(400)
-      obstacle.y = -50
-      player.x = 200
+      rect_obstacle.y = -50
+      rect_player.x = 200
       if lives <= 0:
         game_over = True
   # gambar layar
   screen.fill(white)
-  pygame.draw.rect(screen, blue, player)
-  pygame.draw.rect(screen, red, obstacle)
+  # pygame.draw.rect(screen, blue, rect_player)
+  # pygame.draw.rect(screen, red, rect_obstacle)
+  
+  screen.blit(player, rect_player)
+  screen.blit(obstacle, rect_obstacle)
   
   # membuat nyawa dalam avatar / gambar
   if icon:
@@ -128,7 +139,7 @@ while True:
     if keys[pygame.K_r]:
       lives = 3
       game_over = False
-      obstacle.y = -50
+      rect_obstacle.y = -50
   
   pygame.display.flip()
   clock.tick(60)
