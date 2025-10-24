@@ -39,21 +39,21 @@ rect_boom = image_boom.get_rect()
 rect_boom.center = (500, 300)
 
 # Proyektil king pig
-projectiles = []
-shoot_timer = 0
-SHOOT_INTERVAL = 45 
-PROJECTILE_SPEED = 8
+array_proyektil = []
+timer_tembakan = 0
+INTERVAL_TEMBAKAN = 45 
+KECEPATAN_PROYEKTIL = 8
 
 # Proyektil angry bird
-bird_projectiles = []
-bird_shoot_cooldown = 0 
-BIRD_SHOOT_DELAY = 60
-BIRD_PROJECTILE_SPEED = 7
+proyektil_angry_bird = []
+angry_bird_cooldown_tembakan = 0 
+ANGRY_BIRD_SHOOT_DELAY = 60
+ANGRY_BIRD_KECEPATAN_PROYEKTIL = 7
 
 running = False
 score = 0
-boom_timer = 0
-lives = 3
+timer_ledakan = 0
+nyawa = 3
 game_over = False
 
 # font
@@ -84,43 +84,43 @@ def tembak_proyektil():
   jarak = (dx**2 + dy**2)**0.5
   
   if jarak > 0:
-    dx = (dx / jarak) * PROJECTILE_SPEED
-    dy = (dy / jarak) * PROJECTILE_SPEED
+    dx = (dx / jarak) * KECEPATAN_PROYEKTIL
+    dy = (dy / jarak) * KECEPATAN_PROYEKTIL
   else:
-    dx = PROJECTILE_SPEED
+    dx = KECEPATAN_PROYEKTIL
     dy = 0
   
-  projectile_rect = pygame.Rect(rect_king.centerx - 10, rect_king.centery - 10, 20, 20)
-  projectile = {'rect': projectile_rect, 'dx': dx, 'dy': dy}
-  projectiles.append(projectile)
+  rect_proyektil = pygame.Rect(rect_king.centerx - 10, rect_king.centery - 10, 20, 20)
+  proyektil = {'rect': rect_proyektil, 'dx': dx, 'dy': dy}
+  array_proyektil.append(proyektil)
 
 def update_proyektil():
-  for projectile in projectiles[:]:
-    projectile['rect'].x += projectile['dx']
-    projectile['rect'].y += projectile['dy']
+  for proyektil in array_proyektil[:]:
+    proyektil['rect'].x += proyektil['dx']
+    proyektil['rect'].y += proyektil['dy']
     
-    if (projectile['rect'].x < -20 or projectile['rect'].x > X + 20 or 
-        projectile['rect'].y < -20 or projectile['rect'].y > Y + 20):
-      projectiles.remove(projectile)
+    if (proyektil['rect'].x < -20 or proyektil['rect'].x > X + 20 or 
+        proyektil['rect'].y < -20 or proyektil['rect'].y > Y + 20):
+      array_proyektil.remove(proyektil)
 
-def draw_projectiles():
-  for projectile in projectiles:
-    pygame.draw.circle(screen, (255, 0, 0), projectile['rect'].center, 10)
+def buat_proyektil():
+  for proyektil in array_proyektil:
+    pygame.draw.circle(screen, (255, 0, 0), proyektil['rect'].center, 10)
 
-def shoot_bird_projectile():
-  projectile_rect = pygame.Rect(rect.centerx + 40, rect.centery - 5, 15, 10)
-  projectile = {'rect': projectile_rect, 'dx': BIRD_PROJECTILE_SPEED, 'dy': 0}
-  bird_projectiles.append(projectile)
+def tembak_proyektil_angry_bird():
+  rect_proyektil = pygame.Rect(rect.centerx + 40, rect.centery - 5, 15, 10)
+  proyektil = {'rect': rect_proyektil, 'dx': ANGRY_BIRD_KECEPATAN_PROYEKTIL, 'dy': 0}
+  proyektil_angry_bird.append(proyektil)
 
-def update_bird_projectiles():
-  for projectile in bird_projectiles[:]:
-    projectile['rect'].x += projectile['dx']
-    if projectile['rect'].x > X + 20:
-      bird_projectiles.remove(projectile)
+def update_animasi_tembak():
+  for proyektil in proyektil_angry_bird[:]:
+    proyektil['rect'].x += proyektil['dx']
+    if proyektil['rect'].x > X + 20:
+      proyektil_angry_bird.remove(proyektil)
 
-def draw_bird_projectiles():
-  for projectile in bird_projectiles:
-    pygame.draw.rect(screen, (255, 255, 0), projectile['rect'])
+def objek_proyektil_angry_bird():
+  for proyektil in proyektil_angry_bird:
+    pygame.draw.rect(screen, (255, 255, 0), proyektil['rect'])
 
 def show_splash():
   screen.fill("#ffffff")
@@ -157,44 +157,44 @@ while not running:
     if event.type == pygame.QUIT:
       running = True
     if event.type == pygame.KEYDOWN:
-      if event.key == pygame.K_f and bird_shoot_cooldown == 0 and not game_over:
-        shoot_bird_projectile()
-        bird_shoot_cooldown = BIRD_SHOOT_DELAY
+      if event.key == pygame.K_f and angry_bird_cooldown_tembakan == 0 and not game_over:
+        tembak_proyektil_angry_bird()
+        angry_bird_cooldown_tembakan = ANGRY_BIRD_SHOOT_DELAY
    
   screen.blit(bg_image, (0, 0))
   screen.blit(image_bird, rect)
   
   movement(rect)
   
-  if bird_shoot_cooldown > 0:
-    bird_shoot_cooldown -= 1
+  if angry_bird_cooldown_tembakan > 0:
+    angry_bird_cooldown_tembakan -= 1
   
-  shoot_timer += 1
-  if shoot_timer >= SHOOT_INTERVAL:
+  timer_tembakan += 1
+  if timer_tembakan >= INTERVAL_TEMBAKAN:
     tembak_proyektil()
-    shoot_timer = 0
+    timer_tembakan = 0
   
   update_proyektil()
-  draw_projectiles()
+  buat_proyektil()
   
-  update_bird_projectiles()
-  draw_bird_projectiles()
+  update_animasi_tembak()
+  objek_proyektil_angry_bird()
   
-  for projectile in projectiles[:]:
-    if rect.colliderect(projectile['rect']):
-      projectiles.remove(projectile)
-      lives -= 1
-      if lives <= 0:
+  for proyektil in array_proyektil[:]:
+    if rect.colliderect(proyektil['rect']):
+      array_proyektil.remove(proyektil)
+      nyawa -= 1
+      if nyawa <= 0:
         game_over = True
   
-  for projectile in bird_projectiles[:]:
-    if rect_king.colliderect(projectile['rect']):
-      bird_projectiles.remove(projectile)
+  for proyektil in proyektil_angry_bird[:]:
+    if rect_king.colliderect(proyektil['rect']):
+      proyektil_angry_bird.remove(proyektil)
       score += 2
       
       rect_king.y = random.randint(100, Y - 150)
       rect_king.x = KING_PIG_X - rect_king.width // 2 
-      boom_timer = 45
+      timer_ledakan = 45
       rect_boom.x = rect_king.x - 125
       rect_boom.y = rect_king.y - 125
       if hit_sound:
@@ -202,7 +202,7 @@ while not running:
   
   if rect.colliderect(rect_king):
     screen.blit(image_boom, rect_boom)
-    boom_timer = 45
+    timer_ledakan = 45
     score += 1
     rect_king.y = random.randint(100, Y - 150)
     rect_king.x = KING_PIG_X - rect_king.width // 2 
@@ -211,32 +211,32 @@ while not running:
   else:
     screen.blit(image_king, rect_king)
   
-  if boom_timer > 0:
+  if timer_ledakan > 0:
     screen.blit(image_boom, rect_boom)
-    boom_timer -= 1
+    timer_ledakan -= 1
   else:
     screen.blit(image_king, rect_king)
   
   font = pygame.font.Font(None, 30)
   text_score = font.render(f"Score: {score}", True, (255, 255, 255))
-  text_lives = font.render(f"Lives: {lives}", True, (255, 255, 255))
+  text_nyawa = font.render(f"nyawa: {nyawa}", True, (255, 255, 255))
   screen.blit(text_score, (10, 10))
-  screen.blit(text_lives, (10, 40))
+  screen.blit(text_nyawa, (10, 40))
   
   if game_over:
     game_over_text = font_big.render("GAME OVER!", True, (255, 0, 0))
-    restart_text = font_small.render("Tekan 'R' untuk restart atau 'Q' untuk keluar", True, (255, 255, 255))
+    restart_text = font_small.render("Tekan 'R' untuk restart atau 'Q' untuk keluar", True, (30, 30, 30))
     screen.blit(game_over_text, (width // 2 - game_over_text.get_width() // 2, height // 2 - 50))
     screen.blit(restart_text, (width // 2 - restart_text.get_width() // 2, height // 2 + 20))
     
     keys = pygame.key.get_pressed()
     if keys[pygame.K_r]:
-      lives = 3
+      nyawa = 3
       score = 0
       game_over = False
-      projectiles.clear()
-      bird_projectiles.clear()
-      bird_shoot_cooldown = 0
+      array_proyektil.clear()
+      proyektil_angry_bird.clear()
+      angry_bird_cooldown_tembakan = 0
       rect.center = (200, 300)
       rect_king.center = (KING_PIG_X, 300)
     elif keys[pygame.K_q]:
