@@ -126,10 +126,12 @@ def show_splash():
   screen.fill("#ffffff")
   title_text = font_big.render("Watch Out!", True, "#2030d7")
   info_text = font_small.render("Tekan 'Spasi' untuk memulai", True, "#000000")
+  info_fire = font_small.render("Tekan 'F' untuk menembak", True, "#243456")
   
   # tempel / memindahkan font
   screen.blit(title_text, (width // 2 - title_text.get_width() // 2, 140))
   screen.blit(info_text, (width // 2 - info_text.get_width() // 2, 140 + 50))
+  screen.blit(info_fire, (width // 2 - info_fire.get_width() // 2, 140 + 90))
   
   pygame.display.flip()
   
