@@ -34,7 +34,7 @@ while jalan:
     print("Woioooooooiiii!")
   
   pygame.draw.rect(layar, (0,0,255), player)
-  pygame.draw.cicrcle(layar, (255,0,0), heroes)
+  pygame.draw.circle(layar, (255,0,0), heroes, 50)
     
   pygame.display.flip()
   clock.tick(60)
