@@ -65,10 +65,8 @@ def index_lyrics(t, lyrics_list):
 
 def update_lyrics(t, lyrics_list):
   idx = index_lyrics(t, lyrics_list)
-  # Reset semua lirik ke non-aktif
   for i in range(len(lyrics_list)):
     lyrics_list[i][2] = False
-  # Aktifkan lirik yang sesuai dengan waktu
   if idx is not None:
     lyrics_list[idx][2] = True
 
