@@ -4,8 +4,8 @@ import json
 
 pygame.init()
 
-screen_width = 700
-screen_height = 500
+screen_width = 820
+screen_height = 600
 
 layar = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Music Player")
@@ -49,11 +49,49 @@ try:
         lyrics_list = [(item["time"], item["text"]) for item in song["lyrics"]]
         lyrics_data[song_id] = lyrics_list
 except FileNotFoundError:
-    print("Lyrics file not found. Using default lyrics.");
-    lyrics_data = {}
-except Exception as e:
-    print(f"Error loading lyrics: {e}")
-    lyrics_data = {}
+    print("Lyrics file not found. Using default lyrics.")
+    # Default lyrics data (same as before)
+    lyrics_data = {
+      # 0: [  # Back to Friends
+      #   (0, "Song starting..."),
+      #   (5, "First verse"),
+      #   (10, "Music playing..."),
+      #   (15, "Chorus coming..."),
+      # ],
+      # 1: [  # Terlalu Tinggi
+      #   (0, "Terlalu tinggi"),
+      #   (5, "Untuk ku raih"),
+      #   (10, "Terlalu jauh"),
+      #   (15, "Untuk ku kejar"),
+      # ],
+      # 2: [  # Versace On The Floor
+      #   (0, "Song begins..."),
+      #   (5, "Let's take our time tonight"),
+      #   (10, "Above us all the stars are watching"),
+      #   (15, "There's no place I'd rather be"),
+      # ],
+      # 3: [  # Ride
+      #   (13, "I just wanna stay"),
+      #   (15, "In the sun where I find"),
+      #   (16, "I know it's hard sometimes"),
+      #   (18, "Pieces of peace in the sun's peace of mind"),
+      # ],
+      # 4: [  # I'm Not The Only One
+      #   (0, "You and me we made a vow"),
+      #   (5, "For better or for worse"),
+      #   (10, "I can't believe you let me down"),
+      #   (15, "But the proof is in the way it hurts"),
+      # ],
+      # 5: [  # Red
+      #   (0, "Loving him is like..."),
+      #   (5, "Driving a new Maserati"),
+      #   (10, "Down a dead-end street"),
+      #   (15, "Faster than the wind"),
+      # ],
+    } 
+# except Exception as e:
+#     print(f"Error loading lyrics: {e}")
+#     lyrics_data = {}
 
 try:
   back_to_friends = pygame.mixer.Sound("./music/sombr - back to friends (official audio).mp3")
