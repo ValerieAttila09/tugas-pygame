@@ -80,7 +80,7 @@ music_images = []
 music_rects = []
 title_surfaces = []
 title_rects = []
-DEFAULT_IMAGE_SIZE = (100, 100)
+DEFAULT_IMAGE_SIZE = (128, 128)
 
 font = pygame.font.Font(None, 20)
 title_font = pygame.font.Font(None, 24)
@@ -88,10 +88,10 @@ lyric_font = pygame.font.Font(None, 36)
 music_bar_font = pygame.font.Font(None, 28)
 
 COLUMNS = 3
-START_X = 150
-START_Y = 150 
-SPACING_X = 150  
-SPACING_Y = 150  
+START_X = 200
+START_Y = 140 
+SPACING_X = 210
+SPACING_Y = 180  
 
 for i in range(len(musics)):
   music = pygame.image.load(musics_image[i])
@@ -108,11 +108,11 @@ for i in range(len(musics)):
   title_surface = font.render(music_titles[i], True, TEXT_COLOR)
   title_rect = title_surface.get_rect()
   title_rect.centerx = music_rect.centerx
-  title_rect.top = music_rect.bottom + 5
+  title_rect.top = music_rect.bottom + 12
   title_surfaces.append(title_surface)
   title_rects.append(title_rect)
 
-MUSIC_BAR_HEIGHT = 80
+MUSIC_BAR_HEIGHT = 140
 music_bar_rect = pygame.Rect(0, screen_height - MUSIC_BAR_HEIGHT, screen_width, MUSIC_BAR_HEIGHT)
 progress_bar_rect = pygame.Rect(20, screen_height - 25, screen_width - 40, 10)
 
@@ -156,7 +156,7 @@ while running:
     pygame.draw.rect(layar, PRIMARY_COLOR, music_bar_rect, 2)
     
     if current_music_index is not None and current_music_index < len(music_images):
-      small_album = pygame.transform.scale(music_images[current_music_index], (60, 60))
+      small_album = pygame.transform.scale(music_images[current_music_index], (80, 80))
       album_rect = small_album.get_rect()
       album_rect.centery = music_bar_rect.centery
       album_rect.left = 20
@@ -194,11 +194,11 @@ while running:
         time_surface = font.render(time_text, True, SECONDARY_TEXT_COLOR)
         time_rect = time_surface.get_rect()
         time_rect.right = progress_bar_rect.right
-        time_rect.top = progress_bar_rect.bottom + 5
+        time_rect.top = progress_bar_rect.bottom - 26
         layar.blit(time_surface, time_rect)
     
-    back_button_rect = pygame.Rect(screen_width - 100, music_bar_rect.top + 10, 80, 30)
-    pygame.draw.rect(layar, PRIMARY_COLOR, back_button_rect, border_radius=5)
+    back_button_rect = pygame.Rect(screen_width - 160, music_bar_rect.top + 10, 120, 40)
+    pygame.draw.rect(layar, PRIMARY_COLOR, back_button_rect, border_radius=6)
     back_text = font.render("Back", True, TEXT_COLOR)
     back_text_rect = back_text.get_rect()
     back_text_rect.center = back_button_rect.center
