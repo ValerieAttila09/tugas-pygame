@@ -82,6 +82,8 @@ title_surfaces = []
 title_rects = []
 DEFAULT_IMAGE_SIZE = (128, 128)
 
+back_button_rect = pygame.Rect(0, 0, 0, 0)
+
 font = pygame.font.Font(None, 20)
 title_font = pygame.font.Font(None, 24)
 lyric_font = pygame.font.Font(None, 36)
@@ -142,7 +144,14 @@ while running:
             music_start_time = pygame.time.get_ticks() / 1000.0 
             current_lyric = ""
             is_music_bar_visible = True
-  
+      
+      if is_music_bar_visible and back_button_rect and back_button_rect.collidepoint(mouse_pos):
+        is_music_bar_visible = False
+        pygame.mixer.stop()
+        current_music_index = None
+
+  back_button_rect = None
+
   layar.fill(BACKGROUND_COLOR)
   
   if not is_music_bar_visible:
@@ -203,12 +212,6 @@ while running:
     back_text_rect = back_text.get_rect()
     back_text_rect.center = back_button_rect.center
     layar.blit(back_text, back_text_rect)
-    
-    mouse_pos = pygame.mouse.get_pos()
-    if back_button_rect.collidepoint(mouse_pos):
-      is_music_bar_visible = False
-      pygame.mixer.stop()
-      current_music_index = None
   
   if current_music_index is not None and is_music_bar_visible:
     elapsed_time = current_time - music_start_time
