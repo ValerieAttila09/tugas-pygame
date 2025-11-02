@@ -10,7 +10,6 @@ screen_height = 600
 layar = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Music Player")
 
-# Colors
 BACKGROUND_COLOR = (21, 36, 51)
 PRIMARY_COLOR = (70, 130, 180)
 ACCENT_COLOR = (255, 215, 0)
@@ -37,12 +36,9 @@ music_titles = [
   "Red"
 ]
 
-# Load lyrics from JSON file
 try:
     with open("./data/lyrics.json", "r") as f:
         lyrics_json = json.load(f)
-    
-    # Convert JSON format to the format used in the app
     lyrics_data = {}
     for song in lyrics_json["songs"]:
         song_id = song["id"]
@@ -50,48 +46,7 @@ try:
         lyrics_data[song_id] = lyrics_list
 except FileNotFoundError:
     print("Lyrics file not found. Using default lyrics.")
-    # Default lyrics data (same as before)
-    lyrics_data = {
-      # 0: [  # Back to Friends
-      #   (0, "Song starting..."),
-      #   (5, "First verse"),
-      #   (10, "Music playing..."),
-      #   (15, "Chorus coming..."),
-      # ],
-      # 1: [  # Terlalu Tinggi
-      #   (0, "Terlalu tinggi"),
-      #   (5, "Untuk ku raih"),
-      #   (10, "Terlalu jauh"),
-      #   (15, "Untuk ku kejar"),
-      # ],
-      # 2: [  # Versace On The Floor
-      #   (0, "Song begins..."),
-      #   (5, "Let's take our time tonight"),
-      #   (10, "Above us all the stars are watching"),
-      #   (15, "There's no place I'd rather be"),
-      # ],
-      # 3: [  # Ride
-      #   (13, "I just wanna stay"),
-      #   (15, "In the sun where I find"),
-      #   (16, "I know it's hard sometimes"),
-      #   (18, "Pieces of peace in the sun's peace of mind"),
-      # ],
-      # 4: [  # I'm Not The Only One
-      #   (0, "You and me we made a vow"),
-      #   (5, "For better or for worse"),
-      #   (10, "I can't believe you let me down"),
-      #   (15, "But the proof is in the way it hurts"),
-      # ],
-      # 5: [  # Red
-      #   (0, "Loving him is like..."),
-      #   (5, "Driving a new Maserati"),
-      #   (10, "Down a dead-end street"),
-      #   (15, "Faster than the wind"),
-      # ],
-    } 
-# except Exception as e:
-#     print(f"Error loading lyrics: {e}")
-#     lyrics_data = {}
+    lyrics_data = {} 
 
 try:
   back_to_friends = pygame.mixer.Sound("./music/sombr - back to friends (official audio).mp3")
@@ -102,7 +57,6 @@ try:
   red_taylor_swift = pygame.mixer.Sound("./music/Red (Taylor's Version).mp3")
   musics = [back_to_friends, terlalu_tinggi, versace_on_the_floor, ride_twenty_one_pilot, im_not_the_only_one, red_taylor_swift]
   
-  # Get music lengths (approximate)
   music_lengths = [
     back_to_friends.get_length(),
     terlalu_tinggi.get_length(),
@@ -158,7 +112,6 @@ for i in range(len(musics)):
   title_surfaces.append(title_surface)
   title_rects.append(title_rect)
 
-# Music bar properties
 MUSIC_BAR_HEIGHT = 80
 music_bar_rect = pygame.Rect(0, screen_height - MUSIC_BAR_HEIGHT, screen_width, MUSIC_BAR_HEIGHT)
 progress_bar_rect = pygame.Rect(20, screen_height - 25, screen_width - 40, 10)
@@ -171,44 +124,37 @@ current_lyric = ""
 is_music_bar_visible = False
 
 while running:
-  current_time = pygame.time.get_ticks() / 1000.0  # Current time in seconds
+  current_time = pygame.time.get_ticks() / 1000.0 
   
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
       sys.exit()
     
-    # Check for mouse clicks on music images
     if event.type == pygame.MOUSEBUTTONDOWN:
       mouse_pos = pygame.mouse.get_pos()
       for i, rect in enumerate(music_rects):
         if rect.collidepoint(mouse_pos):
-          # Stop all music
           pygame.mixer.stop()
-          # Play selected music
           if i < len(musics):
             musics[i].play()
             current_music_index = i
-            music_start_time = pygame.time.get_ticks() / 1000.0  # Convert to seconds
+            music_start_time = pygame.time.get_ticks() / 1000.0 
             current_lyric = ""
             is_music_bar_visible = True
   
   layar.fill(BACKGROUND_COLOR)
   
-  # Draw music selection grid only when music bar is not visible
   if not is_music_bar_visible:
     for i in range(len(music_images)):
-      # Draw a border around each album image
       border_rect = music_rects[i].inflate(10, 10)
       pygame.draw.rect(layar, PRIMARY_COLOR, border_rect, 2, border_radius=5)
       layar.blit(music_images[i], music_rects[i])
       layar.blit(title_surfaces[i], title_rects[i])
   else:
-    # Draw music bar
     pygame.draw.rect(layar, (30, 40, 50), music_bar_rect)
     pygame.draw.rect(layar, PRIMARY_COLOR, music_bar_rect, 2)
     
-    # Draw album art in music bar
     if current_music_index is not None and current_music_index < len(music_images):
       small_album = pygame.transform.scale(music_images[current_music_index], (60, 60))
       album_rect = small_album.get_rect()
@@ -216,17 +162,14 @@ while running:
       album_rect.left = 20
       layar.blit(small_album, album_rect)
       
-      # Draw song title
       title_surface = music_bar_font.render(music_titles[current_music_index], True, TEXT_COLOR)
       title_rect = title_surface.get_rect()
       title_rect.left = album_rect.right + 15
       title_rect.top = album_rect.top + 5
       layar.blit(title_surface, title_rect)
       
-      # Draw progress bar background
       pygame.draw.rect(layar, PROGRESS_BG_COLOR, progress_bar_rect)
       
-      # Draw progress bar fill
       if current_music_index < len(music_lengths):
         elapsed_time = current_time - music_start_time
         progress = min(elapsed_time / music_lengths[current_music_index], 1.0)
@@ -240,7 +183,6 @@ while running:
           )
           pygame.draw.rect(layar, PROGRESS_FG_COLOR, progress_fill_rect)
       
-      # Draw time indicators
       if current_music_index < len(music_lengths):
         elapsed_time = current_time - music_start_time
         elapsed_minutes = int(elapsed_time // 60)
@@ -255,7 +197,6 @@ while running:
         time_rect.top = progress_bar_rect.bottom + 5
         layar.blit(time_surface, time_rect)
     
-    # Draw back button
     back_button_rect = pygame.Rect(screen_width - 100, music_bar_rect.top + 10, 80, 30)
     pygame.draw.rect(layar, PRIMARY_COLOR, back_button_rect, border_radius=5)
     back_text = font.render("Back", True, TEXT_COLOR)
@@ -263,24 +204,20 @@ while running:
     back_text_rect.center = back_button_rect.center
     layar.blit(back_text, back_text_rect)
     
-      # Check for back button click
     mouse_pos = pygame.mouse.get_pos()
     if back_button_rect.collidepoint(mouse_pos):
       is_music_bar_visible = False
       pygame.mixer.stop()
       current_music_index = None
   
-  # Update and display lyrics
   if current_music_index is not None and is_music_bar_visible:
     elapsed_time = current_time - music_start_time
     
-    # Find the appropriate lyric based on elapsed time
     if current_music_index in lyrics_data:
       for timing, lyric_text in lyrics_data[current_music_index]:
         if elapsed_time >= timing:
           current_lyric = lyric_text
     
-    # Display the current lyric
     if current_lyric:
       lyric_surface = lyric_font.render(current_lyric, True, ACCENT_COLOR)
       lyric_rect = lyric_surface.get_rect()
